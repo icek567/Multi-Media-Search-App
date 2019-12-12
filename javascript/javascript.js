@@ -8,6 +8,16 @@ $(document).ready(function () {
 
     $('.collapsible').collapsible();
 
+
+    //this code below keeps more than one collapsible div open at a time
+
+    var elem = document.querySelector('.collapsible.expandable');
+    var instance = M.Collapsible.init(elem, {
+        accordion: false
+    });
+
+
+    
     // var director = "JJ Abrams";
     // var directorURL = "http://www.omdbapi.com/?" + "apikey=" + "trilogy&";
 
@@ -20,6 +30,7 @@ $(document).ready(function () {
     //     console.log(response);
 
     // });
+
 
 
     //_____________________________________________
@@ -145,7 +156,7 @@ $(document).ready(function () {
         }
     });
 
-});
+
 //                      Functions below this line
 //___________________________________________________________________________________
 //This function sets the query url for searching by title and then calls the googelbooksQuery function
@@ -187,6 +198,10 @@ function googleBooksQuery(googleBooksURL) {
         method: "GET"
     }).then(function (respGoogleBooks) {
         console.log(respGoogleBooks);
+        //this opens the collapsible div when results are rendered
+        instance.open(1);
+
+        $("#BookCount").text(respGoogleBooks.items.length);
 
         var countRowDiv1 = 0;
         var rowDiv1 = $("<div>").attr("class", "row");
@@ -220,7 +235,9 @@ function googleBooksQuery(googleBooksURL) {
                 //line of code creates a p tag, adds designated classes, and adds the published date of book into it
                 rowDiv1.append(colDiv1.append($("<p>").attr("class", "flow-text").text("Published Date: " + respGoogleBooks.items[index].volumeInfo.publishedDate)));
                 //line of code that creates creates the img tag, adds the image to it, and places it into the proper div
+                if (respGoogleBooks.items[index].volumeInfo.imageLinks) {
                 rowDiv1.append(colDiv1.append($("<img>").attr({ "class": "responsive-img", "src": respGoogleBooks.items[index].volumeInfo.imageLinks.thumbnail, "alt": "Image" })));
+                };
                 // genTitleImgFromQuery(rowDiv1, colDiv1, respGoogleBooks.items[index].volumeInfo.title, bookImg);
                 genAuthorList(rowDiv1, colDiv1, authorList, respGoogleBooks.items[index].volumeInfo);
 
@@ -253,6 +270,8 @@ function OMDBTitleQuery(movie, apiKey) {
     }).then(function (response) {
 
         console.log(response);
+        //this opens the collapsible div when the results are rendered
+        instance.open(0);
 
         if (response.Error === "Movie not found!") {
             noResultsFound($("#movieContent"));
@@ -289,6 +308,8 @@ function OMDBTitleQuery(movie, apiKey) {
 
             $("#movieContent").append(movieMain);
 
+            $("#MovieCount").text(1)
+
         }
 
     });
@@ -312,6 +333,9 @@ function OMDBKeywordQuery(keyword, apiKey) {
         if (respKeywordMovie.Error === "Movie not found!") {
             noResultsFound($("#movieContent"));
         }
+        //this opens the collapsible div when the results are rendered
+        instance.open(0);
+
 
         $.each(respKeywordMovie.Search, function (index) {
 
@@ -369,6 +393,9 @@ function rawgKeywordQuery(searchCriteria) {
             noResultsFound($("#gameContent"));
         }
 
+        $("#GameCount").text(respRawg.count)
+
+        instance.open(2);
         //each function that runs for every index of the resp object returned by the ajax call to Rawg api
         $.each(respRawg.results, function (index) {
 
@@ -543,6 +570,9 @@ function CapitalizeWords(string) {
     word1 = capitalizedString.trim();
     return word1;
 }
+
+});
+
 //This functions has not been written yet.
 function lowercaseWords() { }
 
