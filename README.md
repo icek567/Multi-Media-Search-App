@@ -1,7 +1,7 @@
 ## Media Buffet: A Multi Media Search Tool Application
 
 the link to our page is shown below:
-https://jlovejo2.github.io/Multi-Media-Search-App/
+https://icek567.github.io/Multi-Media-Search-App/
 
 ## Table of Contents
 * [Version 1.0](#version-1.0)
